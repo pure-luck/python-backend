@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>소상공인을 위한 Kiosk</title>
+  <link rel="stylesheet" type = "text/css" href="home.css">
+  <script>
+    function logIn(){
+      var obj = document.myform;
+      var id = obj.id.value;
+      var password = obj.password.value;
+
+      var obj2 = new Object();
+      obj2.id = id;
+      obj2.password = password;
+      var jsonData = JSON.stringify(obj2);
+
+      var req = new XMLHttpRequest();
+      req.onreadystatechange = function(){
+        if(req.readyState == 4 && req.status== 200){
+            //1. Access Token을 받아서 sessionStorage에 저장한다.(setItem)
+            //2. 이후 작업을 할 때마다 sessionStorage.getItem하여서 서버에 토큰 제출
+            var token = JSON.stringify(req.responseText); // ?!
+            sessionStorage.setItem("Authorization",token);// ?! sessionStorage에 저장할 때는, JSON 형식으로 저장!!!
+            // 나중에 토큰을 서버로 보낼때는 JSON.parse(session.Storage.getItem("Authorization"))해줘야함
+            //로그인이 성공하면,
+            alert('로그인 성공');
+            console.log("bb");
+            location.replace('store.html'); // 화면 이동
+        }
+      }
+      //52.79.236.212:5000/login
+      var url = "http://125.137.84.209:5000/login";
+      req.open("POST",url,true);
+      req.setRequestHeader("Content-type","application/json");
+      req.send(jsonData);
+    }
+  </script>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li>소개</li>
+      <li>브랜드 스토리</li>
+      <li>사용방법</li>
+      <li>사용리뷰</li>
+      <li>게시판</li>
+    </ul>
+  </nav>
+
+  <img src="main.png" width=65%>
+
+
+  <aside id="right" >
+    <div id="login">
+      <form name = "myform">
+        아이디 <br/><input type="text" name="id"/><br/>
+        패스워드 <br/><input type="password" name="password"/><br/>
+        <input type="submit" value="로그인" onclick="logIn()"/><br/>
+      </form>
+        <a href="register.html">회원가입</a>
+    </div>
+  </aside>
+
+  <footer>
+    (주)키오스크 모바일공학과
+  </footer>
+</body>
+</html>

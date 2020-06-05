@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chat Room</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+
+</head>
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+var sock = io.connect('http://obtao.tplinkdns.com:84');
+sock.on('connect', function(){
+var connect_string = 'table';
+sock.send(connect_string);
+});
+
+sock.on('hello', function(msg){
+$('#messages').append('<li>' +'>>Hello :'+ msg + '</li>');
+console.log('Received Hello Message');
+});
+
+sock.on('message', function(msg){
+// console.log(type(msg));
+if(msg.type === 'normal'){
+$('#messages').append('>> '+msg.message+'<br>');
+}else if(msg.type == 'connect'){
+$('#messages').append('<li>' + msg.message + '</li>');
+}
+else{
+$('#messages').append('<li>'+'json\t'+ JSON.stringify(msg.message) + '</li>');
+}
+
+console.log('Received Message : '+msg.type);
+});
+
+sock.on('identify', function(msg){
+  var identity={"id":"mins","store_name":"minskitchen","table_number":1,"manager":false};
+  sock.emit('identify',identity);
+});
+
+sock.on('call', function(msg){
+  console.log('done! ' + msg.table_number)
+});
+
+$('#sendbutton').on('click', function(){
+var order_info={"id":"mins","store_name":"minskitchen","table_number":1,"order":{"name":"menu1","price":5000,"count":1}};
+sock.emit('order',order_info);
+sock.send($('#myMessage').val());
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.open("GET","http://ec2-52-79-236-212.ap-northeast-2.compute.amazonaws.com:5000/ping",true);
+xmlhttp.send();
+xmlhttp.onreadystatechange= function(){
+  if(xmlhttp.readyState==4&&xmlhttp.status==200){
+    console.log(xmlhttp.response);
+  }
+}
+$('#myMessage').val('');
+});
+});
+
+
+</script>
+<ul id="messages"></ul>
+<input type="text" id="myMessage">
+<button id="sendbutton">Send</button>
+
+</body>
+</html>
+
+
+<!-- // 서버 접속
+socket.on( 'connect', function() {
+  socket.emit( 'my event', {
+    data: 'User Connected'
+  } )
+  var form = $( 'form' ).on( 'submit', function( e ) {
+    e.preventDefault()
+    let user_name = $( 'input.username' ).val()
+    let user_input = $( 'input.message' ).val()
+    socket.emit( 'my event', {
+      user_name : user_name,
+      message : user_input
+    } )
+    $( 'input.message' ).val( '' ).focus()
+  } )
+} )
+
+// 받은 메시지
+socket.on( 'my response', function( msg ) {
+  console.log( msg )
+  if( typeof msg.user_name !== 'undefined' ) {
+    $( 'h3' ).remove()
+    $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+  }
+})  -->

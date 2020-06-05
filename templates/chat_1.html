@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chat Room</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+
+</head>
+<body>
+<script type="text/javascript">
+$(document).ready(function(){
+
+
+$('#sendbutton').on('click', function(){
+var order_info={"id":"mins","store_name":"minskitchen","table_number":1,"order":{"name":"menu1","price":5000,"count":1}};
+
+$('#myMessage').val('');
+});
+});
+
+
+</script>
+<ul id="messages"></ul>
+<input type="text" id="myMessage">
+<button id="sendbutton">Send</button>
+
+</body>
+</html>
+
+
+<!-- // 서버 접속
+socket.on( 'connect', function() {
+  socket.emit( 'my event', {
+    data: 'User Connected'
+  } )
+  var form = $( 'form' ).on( 'submit', function( e ) {
+    e.preventDefault()
+    let user_name = $( 'input.username' ).val()
+    let user_input = $( 'input.message' ).val()
+    socket.emit( 'my event', {
+      user_name : user_name,
+      message : user_input
+    } )
+    $( 'input.message' ).val( '' ).focus()
+  } )
+} )
+
+// 받은 메시지
+socket.on( 'my response', function( msg ) {
+  console.log( msg )
+  if( typeof msg.user_name !== 'undefined' ) {
+    $( 'h3' ).remove()
+    $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+  }
+})  -->
