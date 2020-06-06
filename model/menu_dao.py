@@ -59,7 +59,7 @@ class MenuDao:
         } if row else None
 
     def update_menu(self,menu):
-        row=self.db.execute(text("""
+        self.db.execute(text("""
             update menus set 
             menu_name = :name,
             img_url = :img_url,
@@ -68,6 +68,16 @@ class MenuDao:
             description = :description
             where user_id = :id and category = :category and menu_name = :old_name and store_name = :store_name
         """), menu)
+
+    def update_store_name(self,store):
+        self.db.execute(text("""
+            update menus set store_name = :name where user_id = :id and store_name = :old_name
+        """),store)
+
+    def update_category_name(self,category):
+        self.db.execute(text("""
+            update menus set category = :new_name where user_id = :id and store_name = :store_name and category=:old_name
+        """),category)
 
     def insert_topping(self, menu):
         row = self.db.execute(text("""
@@ -84,7 +94,7 @@ class MenuDao:
     def get_toppings(self, menu):
         rows = self.db.execute(text("""
             select toppings from menus where user_id = :id and category = :category and menu_name = :name and store_name :store_name
-        """)).fetchone()
+        """),menu).fetchone()
         if not rows : return None
         else : rows = json.loads(rows)
         ret = []
@@ -108,7 +118,7 @@ class MenuDao:
     def del_topping(self, menu):
         self.db.execute(text("""
             update menus set topping = json_remove(topping,'$[:i]') from menus where user_id =:id and category = :category and menu_name = :name and store_name =:store_name
-        """))
+        """),menu)
 
 
     def del_menu(self, menu):

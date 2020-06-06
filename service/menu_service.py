@@ -27,7 +27,7 @@ class MenuService:
             f=BytesIO()
             im=Image.open(menu['pic'])
             size = (900, 900)
-            im.thumbnail(size)
+            im=im.resize(size,Image.LANCZOS)
             im.save(f,'png')
             f.seek(0)
             img_url=f"menu-img/{menu['id']}/{menu['store_name']}/{menu['category']}/"+filename+'.png'
@@ -53,7 +53,7 @@ class MenuService:
             f=BytesIO()
             im=Image.open(menu['pic'])
             size = (900, 900)
-            im.thumbnail(size)
+            im=im.resize(size,Image.LANCZOS)
             im.save(f,'png')
             f.seek(0)
             img_url=f"menu-img/{menu['id']}/{menu['store_name']}/{menu['category']}/"+filename+'.png'
@@ -107,3 +107,9 @@ class MenuService:
 
     def get_menu_picture(self, menu):
         return self.menu_dao.get_menu_picture(menu)
+
+    def update_store_name(self,store):
+        self.menu_dao.update_store_name(store)
+
+    def update_category_name(self,category):
+        self.menu_dao.update_category_name(category)

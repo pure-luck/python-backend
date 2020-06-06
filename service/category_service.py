@@ -21,6 +21,9 @@ class CategoryService:
         self.category_dao.update_category(category)
         return True
     
+    def update_store_name(self,store):
+        self.category_dao.update_store_name(store)
+
     def get_categories(self,category):
         return self.category_dao.get_categories(category)
 

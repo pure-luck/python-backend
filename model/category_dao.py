@@ -57,6 +57,12 @@ class CategoryDao:
             update categories set name = :new_name where user_id = :id and name = :old_name and store_name = :store_name
         """),category)
 
+    def update_store_name(self,store):
+        row = self.db.execute(text("""
+            update categories set store_name = :name where user_id = :id and store_name = :old_name
+        """),store)
+
+
     def del_category(self, category):
         self.db.execute(text("""
             delete from categories where user_id= :id and name = :name and store_name = :store_name

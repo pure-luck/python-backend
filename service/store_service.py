@@ -25,7 +25,7 @@ class StoreService:
             f=BytesIO()
             im=Image.open(store['pic'])
             size = (900, 900)
-            im.thumbnail(size)
+            im=im.resize(size,Image.LANCZOS)
             im.save(f,'png')
             f.seek(0)
             img_url=f"store-img/{store['id']}/"+filename+'.png'
@@ -43,13 +43,13 @@ class StoreService:
             old_store=dict(store)
             old_store['name'] = store['old_name']
             old_picture = (self.store_dao.get_store_picture(old_store))[39:]
-            if(old_picture!='default_image.png'):
-                self.s3.delete_object(Bucket=self.config['S3_BUCKET'],Key=old_picture)
+            # if(old_picture!='default_image.png'):
+            #     self.s3.delete_object(Bucket=self.config['S3_BUCKET'],Key=old_picture)
             filename = (store['name'])
             f=BytesIO()
             im=Image.open(store['pic'])
             size = (900, 900)
-            im.thumbnail(size)
+            im=im.resize(size,Image.LANCZOS)
             im.save(f,'png')
             f.seek(0)
             img_url=f"store-img/{store['id']}/"+filename+'.png'

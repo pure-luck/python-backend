@@ -201,6 +201,8 @@ def create_endpoints(app, services,socket_io):
            store['pic']=request.files['pic']
         if store['old_name']!=store['name'] and store_service.get_store_info(store):return 'store name overlap',400
         store_service.update_store_info(store)
+        category_service.update_store_name(store)
+        menu_service.update_store_name(store)
         return '', 200
 
     @app.route('/store-info', methods=['GET'])
@@ -245,6 +247,9 @@ def create_endpoints(app, services,socket_io):
     @login_required
     def create_new_category():
         new_category=dict(request.json)
+        new_category['id']=g.user_id
+        if category_service.get_category(new_category):
+            return 'category name overlap', 400
         category_service.insert_category(new_category)
         ret  = (new_category)
         if ret:return jsonify(ret) 
@@ -254,7 +259,9 @@ def create_endpoints(app, services,socket_io):
     @login_required
     def update_category():
         category = dict(request.json)
+        category['id']=g.user_id
         if category_service.update_category(category):
+            menu_service.update_category_name(category)
             return '', 200
         else : return 'category name overlap', 400
 
@@ -381,6 +388,7 @@ def create_endpoints(app, services,socket_io):
     @login_required
     def insert_topping():
         menu = dict(request.json)
+        menu['id']=g.user_id
         menu_service.insert_topping(menu)
         return '',200
     
@@ -388,6 +396,7 @@ def create_endpoints(app, services,socket_io):
     @login_required
     def del_topping():
         menu = dict(request.json)
+        menu['id']=g.user_id
         menu_service.del_topping(menu)
         return '',200
 
